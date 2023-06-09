@@ -1,0 +1,18 @@
+#!/bin/bash
+
+# This bash script builds the xeus-kernel image
+
+imageName=xeus-kernel-builder
+
+# determine which container system we are using... 
+
+containerCmd=docker
+if [ -x "$(command -v podman)" ]; then
+  containerCmd=podman
+fi
+
+# Build step...
+
+reset
+
+$containerCmd build -t $imageName .

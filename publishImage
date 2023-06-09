@@ -1,0 +1,29 @@
+#!/bin/bash
+
+# This bash script publishes an existing xeus-kernel-builder image to dockerhub
+
+# IT ASSUMES you have a login id and password
+
+if [ "$#" -ne 2 ]; then
+  echo "usage: publishImage <<dockerHub-userName>> <<semanticVersion>>"
+  exit 1
+fi
+
+userName=$1
+version=$2
+imageName=xeus-kernel-builder
+
+# determine which container system we are using... 
+
+containerCmd=docker
+if [ -x "$(command -v podman)" ]; then
+  containerCmd=podman
+fi
+
+$containerCmd login --username=$userName
+
+$containerCmd tag $imageName $userName/$imageName:$version
+
+$containerCmd push $userName/$imageName:$version
+
+$containerCmd logout
